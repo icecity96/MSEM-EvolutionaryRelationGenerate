@@ -5,6 +5,8 @@ This project is used to generate evolutionary relationship in *stakeholder layer
 ## Rules:
 
 ### Common Rules
+Please see source directly.
+
 1. 若功能左侧紧靠利益相关者，则利益相关者可以提供该功能:
     * Generate: Actor|Recipient  --provide-->  Object
     * Remove: Object to simplify the pattern
