@@ -23,12 +23,19 @@ def convert_single_line(sample, predict=True) -> tuple:
     merged_labels = []
     for label_i, label_j in zip(labels[:-1], labels[1:]):
         if label_i[2] == 'Object' and label_j[2] in ['Recipient', 'Actor']:
-            if label_i[1] == label_j[0] or (label_i[1]+1 == label_j[0] and text[label_i[1]] in QUOTATIONS) :
+            if label_i[1] == label_j[0] or (label_i[1] + 1 == label_j[0] and text[label_i[1]] in QUOTATIONS):
                 feature_id, stakeholder_id = text[label_i[0]: label_i[1]], text[label_j[0]: label_j[1]]
                 nodes.append((feature_id, {"node_type": "feature"}))
                 nodes.append((stakeholder_id, {"node_type": "stakeholder"}))
-                edges.append((stakeholder_id, feature_id, {"edge_type": "provide", "created_at": timestamp, "text": text}))
+                edges.append(
+                    (stakeholder_id, feature_id, {"edge_type": "provide", "created_at": timestamp, "text": text}))
                 merged_labels.append(label_i)
+        if label_i[2] == label_j[2] and text[label_i[1]:label_j[0]] == '（': ## BOE （京东方）
+            stakeholder1, stakeholder2 = text[label_i[0]: label_i[1]], text[label_j[0]: label_j[1]]
+            nodes.append((stakeholder1, {"node_type": "stakeholder"}))
+            nodes.append((stakeholder2, {"node_type": "stakeholder"}))
+            edges.append((stakeholder1, stakeholder2, {"edge_type": "equal", "created_at": timestamp, "text": text}))
+
         # TODO: How to handle Attribute more properly? Now I simply remove it.
         if label_i[2] == 'Attribute':
             merged_labels.append(label_i)
@@ -84,7 +91,8 @@ def convert_single_line(sample, predict=True) -> tuple:
             continue
 
         # Rule5
-        if relation == "Ori" and '-'.join([label[2] for label in labels_item]) == "Actor-Action-Object-Action-Object":
+        if relation == "Ori" and '-'.join(
+                [label[2] for label in labels_item]) == "Actor-Action-Object-Action-Object":
             flags += 1
             stakeholder, action1, feature1, action2, feature2 = tuple(labels_item)
             stakeholder = text[stakeholder[0]: stakeholder[1]]
@@ -98,9 +106,10 @@ def convert_single_line(sample, predict=True) -> tuple:
             continue
 
         # Rule6:
-        if relation == "Ori" and '-'.join([label[2] for label in labels_item]) == "Actor-Action-Recipient-Object-Action-Object":
+        if relation == "Ori" and '-'.join(
+                [label[2] for label in labels_item]) == "Actor-Action-Recipient-Object-Action-Object":
             flags += 1
-            stakeholder, action1, stakeholder2,feature1, action2, feature2 = tuple(labels_item)
+            stakeholder, action1, stakeholder2, feature1, action2, feature2 = tuple(labels_item)
             stakeholder = text[stakeholder[0]: stakeholder[1]]
             stakeholder2 = text[stakeholder2[0]: stakeholder2[1]]
             action1, action2 = text[action1[0]: action1[1]], text[action2[0]: action2[1]]
@@ -128,8 +137,27 @@ def convert_single_line(sample, predict=True) -> tuple:
                 nodes.append((text[label[0]: label[1]], {"node_type": "feature"}))
         for index, stakeholder in enumerate(stakeholders[:-1]):
             for node2 in stakeholders[index + 1:]:
-                edges.append((stakeholder, node2, {"edge_type": "uf1", "created_at": timestamp, "text": text, "pattern": pattern}))
+                edges.append((stakeholder, node2,
+                              {"edge_type": "uf1", "created_at": timestamp, "text": text, "pattern": pattern}))
             for node2 in features:
-                edges.append((stakeholder, node2, {"edge_type": "uf2", "created_at": timestamp, "text": text, "pattern": pattern}))
+                edges.append((stakeholder, node2,
+                              {"edge_type": "uf2", "created_at": timestamp, "text": text, "pattern": pattern}))
         # =============================================================================================================
+
+        # Rule 7: 并列句处理 、 和 及
+        # FIXME: Find Right Way
+        '''
+        paralleling_chars = ['、', '和', '及']
+        new_edges = []
+        for labels_item in labels:
+            for index, label in enumerate(labels_item[:-1]):
+                if label[2] == labels_item[index + 1][2] and label[2] in ["Actor", "Recipient"]:
+                    if label[1] < labels_item[index + 1][1] and text[label[1]: labels_item[index + 1][1]] in paralleling_chars:
+                        node1, node2 = text[label[0]: label[1]], text[labels_item[index + 1][0]: labels_item[index + 1][1]]
+                        for edge in edges:
+                            if edge[0] == node1 and edge[1] == node2:
+                                continue
+                            new_edges.append(edge)
+        edges = new_edges
+        '''
     return nodes, edges

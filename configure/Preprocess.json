@@ -1,0 +1,20 @@
+{
+  "preprocess": [
+    {
+      "Twords": null,
+      "level": 0,
+      "Pattern": "Object-Actor",
+      "Edge": [{"source": 1, "target": 0, "r": "BelongTo", "attr": null, "time": false}],
+      "Required": [{"obj1": 0, "obj2": 1, "con": "adjacency", "ignore": "type/quotes.txt"}],
+      "Return": [1]
+    },
+    {
+      "Twords": null,
+      "level": 0,
+      "Pattern": "Object-Recipient",
+      "Edge": [{"source": 1, "target": 0, "r": "BelongTo", "attr": null, "time": false}],
+      "Required": [{"obj1": 0, "obj2": 1, "con": "adjacency", "ignore": "type/quotes.txt"}],
+      "Return": [1]
+    }
+  ]
+}
