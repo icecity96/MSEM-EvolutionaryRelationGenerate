@@ -15,11 +15,14 @@ This project is used to generate evolutionary relationship in *stakeholder layer
 | Field | Description |
 | -------- | -------- |
 | level | If multiple rules are satisfied, choose the one with the highest `level` |
-| Twords | trigger words (see `operations.py` for details) |
-| Pattern | event component sequence |
-| Edge | evolutionary edges should be generated |
+| Twords (*) | trigger words (see `operations.py` for details) |
+| Pattern (*) | event component sequence |
+| Edge (*) | evolutionary edges should be generated |
 | Required | Additional conditions |
 | Return | returned components after processing (only for **Preprocess Rules**) |
+
+Note: **The fields without star are for engineering purposes**
+
 
 ## Project Structure
 ```
