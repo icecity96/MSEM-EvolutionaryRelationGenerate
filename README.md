@@ -20,3 +20,17 @@ This project is used to generate evolutionary relationship in *stakeholder layer
 | Edge | evolutionary edges should be generated |
 | Required | Additional conditions |
 | Return | returned components after processing (only for **Preprocess Rules**) |
+
+## Project Structure
+```
+|-configure/
+|   |---Rules.json          # Evolutionary generation rules
+|   |---Preprocess.json     # Preprocess rules to simplify event components sequence 
+|-type/                     # different type of trigger words set.
+|   |---cooperate.json
+|   |---releases.json
+|   |---...
+|-condition.py              # Interpreter Additional requirements.
+|-operations.py             # basic operations functions
+|-main.py     
+```

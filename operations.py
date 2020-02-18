@@ -53,7 +53,8 @@ def _matched_preprocess(sample, rule):
             labels = labels[0:start] + [labels[start+i] for i in rule["Return"]] + labels[end:]
             pattern_s = '-'.join([label[2] for label in labels])
             index = pattern_s.find(pattern_r, index)
-        return True, edges, labels
+        if len(edges) > 0:
+            return True, edges, labels
     # TODO: if Twords is not None
     return False, None, sample["labels"]
 

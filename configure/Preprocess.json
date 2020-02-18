@@ -15,6 +15,44 @@
       "Edge": [{"source": 1, "target": 0, "r": "BelongTo", "attr": null, "time": false}],
       "Required": [{"obj1": 0, "obj2": 1, "con": "adjacency", "ignore": "type/quotes.txt"}],
       "Return": [1]
+    },
+    {
+      "Twords": null,
+      "level":0,
+      "Pattern": "Actor-Actor",
+      "Edge": [{"source": 0, "target": 1, "r": "Control", "attr": null, "time": true}],
+      "Required": [{"obj1": 0, "obj2": 1, "con": "special_words", "words": "type/control.txt"}],
+      "Return": [1]
+    },
+    {
+      "Twords": null,
+      "level":0,
+      "Pattern": "Actor-Actor",
+      "Edge": [{"source": 0, "target": 1, "r": "join", "attr": null, "time": true}],
+      "Required": [{"obj1": 0, "obj2": 1, "con": "special_words", "words": "type/position.txt"}],
+      "Return": [1]
+    },
+    {
+      "Twords": null,
+      "level": 0,
+      "Pattern": "Action-Action",
+      "Edge": [],
+      "Required": [{"obj1": 0, "obj2": 1, "con": "adjacency"}],
+      "Return": [1]
+    },
+    {
+      "Twords": null,
+      "level":2,
+      "Pattern": "Actor-Object-Actor",
+      "Edge": [
+        {"source": 0, "target": 2, "r": "Control", "attr": null, "time": true},
+        {"source": 1, "target": 2, "r": "BelongTo", "attr": null, "time": false}
+      ],
+      "Required": [
+        {"obj1": 0, "obj2": 1, "con": "special_words", "words": "type/control.txt"},
+        {"obj1": 1, "obj2": 2, "con": "adjacency", "ignore": "type/quotes.txt"}
+      ],
+      "Return": [2]
     }
   ]
 }
